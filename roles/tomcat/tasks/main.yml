@@ -2,12 +2,6 @@
 - name: Install Java 1.7 
   apt: name=openjdk-7-jre state=present
 
-# - name: Creating tomcat1 directory
-#   file: path=/opt/tomcat1 state=directory mode=0755
-
-# - name: Creating tomcat2 directory
-#   file: path=/opt/tomcat2 state=directory mode=0755
-
 - name: Creating tomcat user
   user: name=tomcat createhome=no
 
@@ -22,9 +16,6 @@
 
 - name: Extracting Tomcat for tomcat1
   command: mv /opt/apache-tomcat-7.0.92 /opt/tomcat1
-
-# - name: Extracting Tomcat for tomcat1
-#   command: cp -r /opt/apache-tomcat-7.0.92/ /opt/tomcat1
 
 - name: Extracting Tomcat for tomcat2
   command: cp -ar /opt/tomcat1 /opt/tomcat2

@@ -16,5 +16,8 @@
 - name: enable required other module
   apache2_module: name=proxy_http state=present
 
+- name: Apache configuration file
+  file: src=../files/000-default.conf dest=/etc/apache2/sites-enabled/000-default.conf
+
 - name: restart apache2 service
   command: service apache2 restart
