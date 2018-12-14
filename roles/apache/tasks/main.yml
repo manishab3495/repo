@@ -9,3 +9,12 @@
 
 - name: enable load balancer module
   apache2_module: name=proxy_balancer state=present
+
+- name: enable required other module
+  apache2_module: name=lbmethod_byrequests state=present
+
+- name: enable required other module
+  apache2_module: name=proxy_http state=present
+
+- name: restart apache2 service
+  command: service apache2 restart
