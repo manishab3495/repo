@@ -1,6 +1,6 @@
 ---
-# - name: Install Java 1.7 
-#   apt: name=openjdk-7-jre state=present
+- name: Install Java 1.7 
+  apt: name=openjdk-7-jre state=present
 
 # - name: Creating tomcat1 directory
 #   file: path=/opt/tomcat1 state=directory mode=0755
@@ -8,23 +8,26 @@
 # - name: Creating tomcat2 directory
 #   file: path=/opt/tomcat2 state=directory mode=0755
 
-# - name: Creating tomcat user
-#   user: name=tomcat createhome=no
+- name: Creating tomcat user
+  user: name=tomcat createhome=no
 
-# - name: Creating tomcat group
-#   group: name=tomcat
+- name: Creating tomcat group
+  group: name=tomcat
 
-# - name: Copying tomcat tar to node
-#   copy: src=../files/apache-tomcat-7.0.92.tar.gz dest=/opt/apache-tomcat-7.0.92.tar.gz
+- name: Copying tomcat tar to node
+  copy: src=../files/apache-tomcat-7.0.92.tar.gz dest=/opt/apache-tomcat-7.0.92.tar.gz
 
-# - name: Extracting Tomcat
-#   command: tar -xvf /opt/apache-tomcat-7.0.92.tar.gz -C /opt/
+- name: Extracting Tomcat
+  command: tar -xvf /opt/apache-tomcat-7.0.92.tar.gz -C /opt/
+
+- name: Extracting Tomcat for tomcat1
+  command: mv /opt/apache-tomcat-7.0.92 /opt/tomcat1
 
 # - name: Extracting Tomcat for tomcat1
-#   command: mv /opt/apache-tomcat-7.0.92 /opt/tomcat1
+#   command: cp -r /opt/apache-tomcat-7.0.92/ /opt/tomcat1
 
-# - name: Extracting Tomcat for tomcat2
-#   command: cp -arv /opt/tomcat1 /opt/tomcat2
+- name: Extracting Tomcat for tomcat2
+  command: cp -ar /opt/tomcat1 /opt/tomcat2
 
 - name: Placing server.xml for tomcat1 at its place
   copy: src=../files/server1.xml dest=/opt/tomcat1/conf/server.xml
@@ -32,65 +35,61 @@
 - name: Placing server.xml for tomcat2 at its place
   copy: src=../files/server2.xml dest=/opt/tomcat2/conf/server.xml
 
-# - name: Creating ROOT.xml directory path for tomcat1
-#   file: path=/opt/tomcat1/conf/Catalina/localhost recurse=yes state=directory mode=0755
+- name: Creating ROOT.xml directory path for tomcat1
+  file: path=/opt/tomcat1/conf/Catalina/localhost recurse=yes state=directory mode=0755
 
-# - name: Creating ROOT.xml directory path for tomcat2
-#   file: path=/opt/tomcat2/conf/Catalina/localhost recurse=yes state=directory mode=0755
+- name: Creating ROOT.xml directory path for tomcat2
+  file: path=/opt/tomcat2/conf/Catalina/localhost recurse=yes state=directory mode=0755
 
-# - name: Copying ROOT.xml at its place for tomcat1
-#   copy: src=../files/ROOT.xml dest=/opt/tomcat1/conf/Catalina/localhost/ROOT.xml
+- name: Copying ROOT.xml at its place for tomcat1
+  copy: src=../files/ROOT.xml dest=/opt/tomcat1/conf/Catalina/localhost/ROOT.xml
 
-# - name: Copying ROOT.xml at its place for tomcat2
-#   copy: src=../files/ROOT.xml dest=/opt/tomcat2/conf/Catalina/localhost/ROOT.xml
+- name: Copying ROOT.xml at its place for tomcat2
+  copy: src=../files/ROOT.xml dest=/opt/tomcat2/conf/Catalina/localhost/ROOT.xml
 
-# - name: Placing JDBC connector at its place for tomcat1
-#   copy: src=../files/mysql-connector-java-5.1.47-bin.jar dest=/opt/tomcat1/lib/
+- name: Placing JDBC connector at its place for tomcat1
+  copy: src=../files/mysql-connector-java-5.1.47-bin.jar dest=/opt/tomcat1/lib/
 
-# - name: Placing JDBC connector at its place for tomcat2
-#   copy: src=../files/mysql-connector-java-5.1.47-bin.jar dest=/opt/tomcat2/lib/
+- name: Placing JDBC connector at its place for tomcat2
+  copy: src=../files/mysql-connector-java-5.1.47-bin.jar dest=/opt/tomcat2/lib/
 
-# - name: Changing Ownership of tomcat1 directory
-#   file: path=/opt/tomcat1 owner=tomcat group=tomcat recurse=yes
+- name: Changing Ownership of tomcat1 directory
+  file: path=/opt/tomcat1 owner=tomcat group=tomcat recurse=yes
 
-# - name: Changing Ownership of tomcat2 directory
-#   file: path=/opt/tomcat2 owner=tomcat group=tomcat recurse=yes
+- name: Changing Ownership of tomcat2 directory
+  file: path=/opt/tomcat2 owner=tomcat group=tomcat recurse=yes
 
-# - name: Changing permission of startup.sh
-#   file: path=/opt/tomcat1/bin/startup.sh mode=755
+- name: Changing permission of startup.sh
+  file: path=/opt/tomcat1/bin/startup.sh mode=755
 
-# - name: Changing permission of startup.sh
-#   file: path=/opt/tomcat1/bin/catalina.sh mode=755
+- name: Changing permission of startup.sh
+  file: path=/opt/tomcat1/bin/catalina.sh mode=755
 
-# - name: Changing permission of catalina.sh
-#   file: path=/opt/tomcat2/bin/startup.sh mode=755
+- name: Changing permission of catalina.sh
+  file: path=/opt/tomcat2/bin/startup.sh mode=755
 
-# - name: Changing permission of catalina.sh
-  # file: path=/opt/tomcat2/bin/catalina.sh mode=755
-# =============
-# - name: Creating tomcat1 system file
-#   copy: src=../files/tomcat1.service dest=/etc/systemd/system/tomcat1.service
+- name: Changing permission of catalina.sh
+  file: path=/opt/tomcat2/bin/catalina.sh mode=755
 
-# - name: Creating tomcat2 system file
-#   copy: src=../files/tomcat2.service dest=/etc/systemd/system/tomcat2.service
+- name: Placing tomcat1 init script
+  copy: src=../files/tomcat1.service dest=/etc/init.d/tomcat1 mode=0755
 
-# - name: enable tomcat1 startup
-#   systemd:
-#     name: tomcat1
-#     enabled: yes
-#     state: restarted
-#     # become: true
+- name: Placing tomcat2 init script
+  copy: src=../files/tomcat2.service dest=/etc/init.d/tomcat2 mode=0755
 
-# - name: enable tomcat2 startup
-#   systemd:
-#     name: tomcat2
-#     enabled: yes
-#     state: restarted
-#     # become: true
-# ===========
+- name: Enabling tomcat1 on server reboot
+  service:
+    name: tomcat1
+    enabled: yes
+
+- name: Enabling tomcat2 on server reboot
+  service:
+    name: tomcat2
+    enabled: yes
+
 - name: Starting tomcat1
-  command: bash /opt/tomcat1/bin/startup.sh
+  command: nohup sh /opt/tomcat1/bin/startup.sh &
 
 
 - name: Starting tomcat2
-  command: bash /opt/tomcat2/bin/startup.sh
+  command: nohup sh /opt/tomcat2/bin/startup.sh &
